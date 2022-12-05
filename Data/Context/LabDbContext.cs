@@ -7,20 +7,18 @@ namespace Data.Context;
 
 public class LabDbContext : DbContext
 {
-    public DbSet<Contato> Contatos { get; set; }
-    public DbSet<Account> Accounts { get; set; }
+    public DbSet<Contato> Contatos { get; set; } = null!;
+    public DbSet<Account> Accounts { get; set; } = null!;
 
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    public LabDbContext(DbContextOptions<LabDbContext> options) : base(options)
     {
-        options.UseNpgsql("Server=localhost,5432;Database=lab;User ID=danilloism;Password=senhatemp123");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-    modelBuilder
-        .HasPostgresExtension("uuid-ossp")
-        .HasPostgresEnum<CategoriasEnum>()
-        .ApplyConfiguration(new ContatoMap())
-        .ApplyConfiguration(new AccountMap());
+        modelBuilder
+            .HasPostgresEnum<CategoriasEnum>()
+            .ApplyConfiguration(new ContatoMap())
+            .ApplyConfiguration(new AccountMap());
     }
 }

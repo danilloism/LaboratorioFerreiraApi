@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Models;
 
 namespace Data.Mappings;
@@ -16,7 +17,8 @@ public class ContatoMap : IEntityTypeConfiguration<Contato>
             .IsRequired()
             .HasColumnName("uuid")
             .HasColumnType("uuid")
-            .HasDefaultValueSql("uuid_generate_v4()");
+            .HasValueGenerator<GuidValueGenerator>()
+            .ValueGeneratedOnAdd();
 
         builder
             .Property(x => x.CriadoEm)
@@ -25,6 +27,17 @@ public class ContatoMap : IEntityTypeConfiguration<Contato>
             .HasColumnType("timestamptz")
             .HasDefaultValueSql("now()")
             .ValueGeneratedOnAdd();
+
+        builder.Property(x => x.Telefones)
+            .IsRequired()
+            .HasColumnName("telefones")
+            .HasColumnType("varchar(11)[]");
+
+        builder.Property(x => x.Categorias)
+            .IsRequired()
+            .HasColumnName("categorias")
+            .HasColumnType("categorias_enum[]");
+
         builder
             .Property(x => x.AtualizadoEm)
             .IsRequired()
